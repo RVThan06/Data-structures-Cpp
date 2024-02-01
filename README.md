@@ -1,6 +1,6 @@
-#Data-Structures in Python
+# Data-Structures in Python
 
-#This repository contains data structures implementation using C++
+# This repository contains data structures implementation using C++
 
 The list of data structures are as follows
 1. Stacks
