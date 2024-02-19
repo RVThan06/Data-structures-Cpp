@@ -8,111 +8,99 @@
 #include <cmath>
 
 
-class Heap
+void heapify(int index, std::vector<int> &my_heap)
 {
-private:
-    std::vector <int> heap;
+    // compare parent node with the child nodes till leaf
+    int length = my_heap.size();
+    int largest = index;
+    int left_child = 2*index + 1;
+    int right_child = 2*index + 2;
 
 
-public:
-
-    // default constructor
-    Heap(){}
-
-    // parmeterized constructor
-    Heap(int value)
+    if(right_child<length && my_heap[right_child]>my_heap[index])
     {
-        heap.push_back(value);
+        largest = right_child;
     }
 
-    // destructor
-    ~Heap()
+    if(left_child < length && my_heap[left_child] > my_heap[largest])
     {
-
+        largest = left_child;
     }
 
-    // insert node into heap
-    void insert(int value)
+    if(largest!=index)
     {
-        heap.push_back(value);
-        double index = heap.size() - 1;
-        heapify(index);
-    }
+        int temp = my_heap[index];
+        my_heap[index] = my_heap[largest];
+        my_heap[largest] = temp;
 
-    void delete_node(int value)
+        // next recursion move to child node just swaped, so we go to lower nodes to heapify
+        heapify(largest, my_heap);
+    }
+}
+
+
+void build_heap(std::vector<int> &my_heap)
+{
+    // find the internal nodes(non-leaf nodes)
+    int nodes = (std::floor(my_heap.size()/2) - 1);
+
+    for(int i=nodes; i>=0; i--)
     {
+        heapify(i, my_heap);
+    }
+}
+
+
+void delete_node(int value, std::vector<int> &my_heap)
+{
         int index;
-        int last_index = heap.size()-1;
+        int last_index = my_heap.size()-1;
         for(int i=0; i<=last_index; i++)
         {
-            if(value==heap[i])
+            if(value==my_heap[i])
             {
                 index = i;
                 break;
             }
         }
         // replace last item value with the value to be deleted
-        heap.at(index) = heap.at(heap.size()-1);
+        my_heap.at(index) = my_heap.at(last_index);
         // remove last item
-        heap.pop_back();
-        heapify(last_index-1);
+        my_heap.pop_back();
+        heapify(index, my_heap);
+}
 
-    }
 
-    void heapify(double index)
+void print_heap(std::vector<int> &my_heap)
+{
+    for(const int& num: my_heap)
     {
-        while(index!=0)
-        {
-            // index is of datatype double since ceil function needs decimal part
-            int parent_index = std::ceil(index/2) - 1;
-            if(heap.at(index)>heap.at(parent_index))
-            {
-                int temp = heap.at(index);
-                heap.at(index) = heap.at(parent_index);
-                heap.at(parent_index) = temp;
-            }
-            index = parent_index;
-        }
-
+        std::cout<<num<<", ";
     }
+    std::cout<<std::endl;
+}
 
-    void display_heap()
-    {
-        for(const int& num : heap)
-        {
-            std::cout<<num<<"-->";
-        }
-    }
 
-};
 
 int main()
 {
-    // initialise the heap object
-    Heap my_heap(35);
+    // initialise vector
+    std::vector<int> my_heap {33, 42, 10, 14, 19, 27, 44, 26, 31};
 
-    // insert multiple nodes
-    int arr [9] = {33, 42, 10, 14, 19, 27, 44, 26, 31};
-    for(const int& num: arr)
-    {
-        my_heap.insert(num);
-    }
+    // build heap using current vector
+    build_heap(my_heap);
 
-    // print the heap
-    my_heap.display_heap();
-    std::cout<<std::endl;
+    // print heap
+    print_heap(my_heap);
 
-    // delete nodes and display
-    my_heap.delete_node(14);
-    my_heap.display_heap();
-    std::cout<<std::endl;
+    // delete node and print heap
+    delete_node(44, my_heap);
+    print_heap(my_heap);
 
-    my_heap.delete_node(42);
-    my_heap.display_heap();
-    std::cout<<std::endl;
+    // delete another node
+    delete_node(33, my_heap);
+    print_heap(my_heap);
 
-    my_heap.delete_node(44);
-    my_heap.display_heap();
 
     return 0;
 }
