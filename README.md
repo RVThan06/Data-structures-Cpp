@@ -1,4 +1,4 @@
-# Data-Structures in Python
+# Data-Structures in C++
 
 # This repository contains data structures implementation using C++
 
